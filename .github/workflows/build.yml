@@ -1,0 +1,14 @@
+name: Build OpenWRT x86 Images
+on: [push]
+
+jobs:
+    build:
+        name: Build x86 OpenWRT
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Run the build script
+              run: bash build_x86.sh
