@@ -12,3 +12,6 @@ jobs:
 
             - name: Run the build script
               run: bash build_x86.sh
+
+            - name: Tree all the files!
+              run: tree -a

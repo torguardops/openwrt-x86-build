@@ -6,14 +6,15 @@ OUTPUT="$(pwd)/images"
 BUILDER="https://downloads.openwrt.org/releases/21.02.0/targets/x86/64/openwrt-imagebuilder-21.02.0-x86-64.Linux-x86_64.tar.xz"
 KERNEL_PARTSIZE=128 #Kernel-Partitionsize in MB
 ROOTFS_PARTSIZE=4096 #Rootfs-Partitionsize in MB
+BASEDIR=$(dirname "$0")
 
 # download image builder
 if [ ! -f "${BUILDER##*/}" ]; then
-	wget "$BUILDER"
+	wget "${BUILDER}"
 	tar xJvf "${BUILDER##*/}"
 fi
 
-mkdir "$OUTPUT"
+mkdir "${OUTPUT}"
 cd openwrt-*/
 
 # list all targets for this image builder, consider 'make help' as well
@@ -26,7 +27,7 @@ make clean
 sed -i "s/CONFIG_TARGET_KERNEL_PARTSIZE=.*/CONFIG_TARGET_KERNEL_PARTSIZE=$KERNEL_PARTSIZE/g" .config
 sed -i "s/CONFIG_TARGET_ROOTFS_PARTSIZE=.*/CONFIG_TARGET_ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE/g" .config
 
-make image  PROFILE="generic" \
+make image PROFILE="generic" \
            PACKAGES="kmod-rt2800-usb rt2800-usb-firmware kmod-cfg80211 kmod-lib80211 kmod-mac80211 kmod-rtl8192cu \
                      docker docker-compose dockerd luci-app-dockerman luci-lib-docker \
                      base-files block-mount fdisk luci-app-minidlna minidlna samba4-server \
@@ -35,5 +36,5 @@ make image  PROFILE="generic" \
                      luci-base luci-ssl luci-mod-admin-full luci-theme-bootstrap \
                      kmod-usb-storage kmod-usb-ohci kmod-usb-uhci e2fsprogs fdisk resize2fs \
                      htop debootstrap luci-compat luci-lib-ipkg dnsmasq luci-app-ttyd" \
-           FILES="/home/ubuntu/Desktop/master_scripts/x86/files/" \
-            BIN_DIR="$OUTPUT"
+           FILES="${BASEDIR}/files/" \
+           BIN_DIR="${OUTPUT}"
